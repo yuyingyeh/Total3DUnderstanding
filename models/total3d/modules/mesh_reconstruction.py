@@ -171,8 +171,8 @@ class DensTMNet(nn.Module):
                     for batch_id in range(n_batch):
                         rm_edges = remove_edges_list[remove_edges_list[:, 0] == batch_id, 1]
                         if len(rm_edges) > 0:
-                            rm_candidates, counts = torch.unique(sphere_edges[rm_edges], return_counts=True)
-                            boundary_ids = counts < sphere_adjacency[rm_candidates - 1].sum(1)
+                            rm_candidates, counts = torch.unique(sphere_edges.to(device)[rm_edges], return_counts=True)
+                            boundary_ids = counts < sphere_adjacency.to(device)[rm_candidates - 1].sum(1)
                             boundary_point_ids[batch_id][rm_candidates[boundary_ids] - 1] = 1
 
                 return out_shape_points, out_sampled_mesh_points, out_indicators, current_edges, boundary_point_ids, current_faces
@@ -206,7 +206,7 @@ class DensTMNet(nn.Module):
                         # cutting edges in training
                         current_edges[batch_id][rm_edges, :] = 1
                         if mode == 'test':
-                            current_faces[batch_id][sphere_edge2face[rm_edges].sum(0).type(torch.bool), :] = 1
+                            current_faces[batch_id][sphere_edge2face.to(device)[rm_edges].sum(0).type(torch.bool), :] = 1
 
                 threshold *= factor
 
