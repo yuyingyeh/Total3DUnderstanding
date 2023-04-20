@@ -53,7 +53,7 @@ def format_mesh(obj_files, bboxes):
         # get points from object
         polydata = object.GetOutput()
         # read points using vtk_to_numpy
-        points = vtk_to_numpy(polydata.GetPoints().GetData()).astype(np.float)
+        points = vtk_to_numpy(polydata.GetPoints().GetData()).astype(np.float32)
 
         mesh_center = (points.max(0) + points.min(0)) / 2.
         points = points - mesh_center
